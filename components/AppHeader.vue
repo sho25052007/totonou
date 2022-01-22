@@ -14,7 +14,7 @@ export default {
     methods: {
         handleScroll () {
         // Your scroll handling here
-        if (window.scrollY >= window.innerHeight) {
+        if (window.scrollY >= window.innerHeight - 10) {
             console.log('scrolled to 100vh')
             this.isOpaque = true
         } else {
@@ -37,6 +37,7 @@ export default {
 
 <style>
     .header-section {
+        z-index: 5;
         width: 100vw;
         position: fixed;
         height: 40px;

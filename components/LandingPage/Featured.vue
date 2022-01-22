@@ -1,39 +1,53 @@
 <template>
-  <div class="featured-section">
-      <div class="feature-one">One</div>
-      <div class="feature-two">Two</div>
-      <div class="feature-three">Three</div>
-      <div class="feature-four">Four</div>
-      <div class="feature-five">Five</div>
-  </div>
+  <!-- <div class="swiper-wrapper featured-section"> -->
+<swiper class="swiper" :options="swiperOption">
+      <swiper-slide class="featured-section feature-one">One</swiper-slide>
+      <swiper-slide class="featured-section feature-two">Two</swiper-slide>
+      <swiper-slide class="featured-section feature-three">Three</swiper-slide>
+      <swiper-slide class="featured-section feature-four">Four</swiper-slide>
+      <swiper-slide class="featured-section feature-five">Five</swiper-slide>
+</swiper>
 </template>
 
 <script>
 export default {
-
+    data() {
+      return {
+        swiperOption: {
+          grabCursor: true,
+          breakpoints: {
+            // when window width is >= 320px
+            320: {
+            slidesPerView: 1.2,
+            spaceBetween: 20
+            },
+            // when window width is >= 480px
+            480: {
+            slidesPerView: 2.2,
+            spaceBetween: 30
+            },
+            // when window width is >= 840px
+            840: {
+            slidesPerView: 3.2,
+            spaceBetween: 30
+            },
+        }
+        //   centeredSlides: true,
+        }
+      }
+    }
 }
 </script>
 
 <style>
-    .featured-section {
+    .swiper-container {
+        background-color: black;
         height: 100vh;
-        background-color: azure;
-        display: flex;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        cursor: grab;
         scroll-snap-align: start;
     }
-    .featured-section::-webkit-scrollbar {
-        display: none;
-    }
-    .featured-section div {
-        flex: 0 0 auto;
+    .featured-section {
+        height: 80% !important;
         padding: 40px;
-        height: 100%;
-        width: 40vw;
-        scroll-snap-align: center;
     }
     .feature-one {
         background-color: aqua;

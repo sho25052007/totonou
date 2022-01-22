@@ -19,8 +19,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '@/plugins/vue-dragscroll.js', ssr: false },
-    '~/plugins/directive.client.js'
+    '~/plugins/directive.client.js',
+    { src: '~/plugins/vue-awesome-swiper.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

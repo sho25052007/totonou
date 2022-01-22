@@ -1,9 +1,8 @@
 <template>
   <div class="home-page">
     <Intro />
-    <Featured v-dragscroll.x/>
+    <Featured/>
     <Description />
-    <div v-log-inner-text>Hello</div>
   </div>
 </template>
 

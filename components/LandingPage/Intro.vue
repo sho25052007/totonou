@@ -1,6 +1,6 @@
 <template>
   <div class="intro-section">
-      <div v-log-inner-text>here is my intro</div>
+      here is my intro
   </div>
 </template>
 
