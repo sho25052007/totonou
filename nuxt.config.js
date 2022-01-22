@@ -20,7 +20,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/directive.client.js',
-    { src: '~/plugins/vue-awesome-swiper.js', ssr: false }
+    { src: '~/plugins/vue-awesome-swiper.js', ssr: false },
+    { src: '~/plugins/vue-freezeframe.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
