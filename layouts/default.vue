@@ -1,16 +1,11 @@
 <template>
   <div class="container">
-      <AppHeader />
       <nuxt />
   </div>
 </template>
 
 <script>
-import AppHeader from '@/components/AppHeader'
 export default {
-  components: {
-    AppHeader,
-  }
 }
 </script>
 
@@ -23,5 +18,13 @@ export default {
     html {
       scroll-snap-type: y proximity;
       scroll-behavior: smooth;
+    }
+    body {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      overflow-y: scroll;
+    }
+    body::-webkit-scrollbar {
+      display: none;
     }
 </style>
