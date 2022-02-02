@@ -1,10 +1,13 @@
 <template>
-<div class="full-page" v-opacity-navbar>
+<div class="full-page">
     <navbar />
-    <intro />
-    <display />
-    <featured/>
-    <description />
+    <div class="home-page" v-scrollbar="{ damping: 0.05 }">
+      <intro />
+      <display />
+      <featured/>
+      <motto />
+      <contact />
+    </div>
 </div>
 </template>
 
@@ -24,11 +27,12 @@ export default {
     }
   },
   components: {
+    'navbar' : require('@/components/AppHeader.vue').default,
     'intro' : require('@/components/LandingPage/Intro.vue').default,
     'display' : require('@/components/LandingPage/Display.vue').default,
     'featured' : require('@/components/LandingPage/Featured.vue').default,
-    'description' : require('@/components/LandingPage/Description.vue').default,
-    'navbar' : require('@/components/AppHeader.vue').default,
+    'motto' : require('@/components/LandingPage/Motto.vue').default,
+    'contact' : require('@/components/LandingPage/Contact.vue').default,
   },
   mounted() {
     const intro = this.$el.querySelector('.intro-section')
@@ -58,8 +62,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .opaque {
     background-color: antiquewhite;
+  }
+  .home-page {
+    width: 100vw;
+    height: 100vh;
   }
 </style>

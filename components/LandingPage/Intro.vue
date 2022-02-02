@@ -15,7 +15,7 @@ export default {
         background-color: gray;
         padding-top: 40px;
         scroll-snap-align: start;
-        background: url('~assets/img/notpot7.jpg') no-repeat center center fixed;
+        background: url('/img/notpot7.jpg') no-repeat center center fixed;
         background-size: cover;
     }
 </style>
