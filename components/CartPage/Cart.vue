@@ -72,8 +72,8 @@ export default {
 
 <style scoped>
     .cart-fullpage {
-        width: 80%;
-        height: 70%;
+        width: 100%;
+        height: 100%;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -90,12 +90,14 @@ export default {
     .cart-info {
         display: flex;
         flex-direction: row;
+        max-height: inherit;
+        height: 85%;
     }
     .cart-item-info {
         width: 50%;
         margin-right: 2vw;
         height: 100%;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
     }
     .cart-item {
@@ -108,6 +110,7 @@ export default {
         width: 50%;
     }
     .card-info {
+        overflow-y: hidden;
         border: 1px solid black;
         width: 50%;
         height: 100%;
@@ -117,6 +120,7 @@ export default {
         margin-left: 2vw;
     }
     .shipping-info {
+        overflow-y: hidden;
         border: 1px solid black;
         width: 50%;
         height: 100%;

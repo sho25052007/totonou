@@ -31,6 +31,7 @@ export default {
         margin-top: 10vh;
         margin-bottom: 5vh;
         background-color: whitesmoke;
+        scroll-snap-align: start end;
 
         display: flex;
         flex-direction: column;

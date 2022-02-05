@@ -53,7 +53,7 @@ export const mutations = {
     addToItem(state, cartItem) {
         let item = state.items.filter(item => item.name === cartItem.name)[0]
         item.quantity += cartItem.quantity
-        item.cost += cartItem.cost
+        item.cost = (Math.round((Number(item.cost) + Number(cartItem.cost)) * 100) / 100).toFixed(2)
     },
     updateQuantityToItem(state, updateInfo) {
         let item = state.items.filter(item => item.name == updateInfo.name)[0]
@@ -70,7 +70,7 @@ export const actions = {
             name: productInfo.name,
             imageURL: productInfo.imageURL,
             price: productInfo.price,
-            cost: (Math.round(Number((productInfo.price) * productInfo.quantity) * 100) / 100).toFixed(2),
+            cost: (Math.round((Number(productInfo.price) * productInfo.quantity) * 100) / 100).toFixed(2),
             quantity: productInfo.quantity
         }
         if (state.items.find(item => item.name == cartItem.name)) {

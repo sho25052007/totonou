@@ -1,13 +1,11 @@
 <template>
 <div class="full-page">
     <navbar />
-    <div class="home-page" v-scrollbar="{ damping: 1 }">
-      <intro />
-      <display />
-      <featured/>
-      <motto />
-      <contact />
-    </div>
+    <intro/>
+    <display />
+    <featured id="shop"/>
+    <motto />
+    <contact />
 </div>
 </template>
 
@@ -34,6 +32,9 @@ export default {
     'motto' : require('@/components/LandingPage/Motto.vue').default,
     'contact' : require('@/components/LandingPage/Contact.vue').default,
   },
+  beforeMount() {
+    window.scrollTo(0,0);
+  },
   mounted() {
     const intro = this.$el.querySelector('.intro-section')
     const header = this.$el.querySelector('.header-section')
@@ -50,6 +51,7 @@ export default {
       (entries, opacityNavbar) => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) {
+            console.log('intersected!!!')
             header.classList.add('opaque')
           } else {
             header.classList.remove('opaque')
@@ -65,9 +67,5 @@ export default {
 <style scoped>
   .opaque {
     background-color: antiquewhite;
-  }
-  .home-page {
-    width: 100vw;
-    height: 100vh;
   }
 </style>

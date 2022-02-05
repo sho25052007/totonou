@@ -14,7 +14,7 @@ export default {
         height: 100vh;
         background-color: gray;
         padding-top: 40px;
-        scroll-snap-align: start;
+        scroll-snap-align: start end;
         background: url('/img/notpot7.jpg') no-repeat center center fixed;
         background-size: cover;
     }

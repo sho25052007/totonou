@@ -16,6 +16,7 @@ export default {
         height: 100vh;
         padding-top: 40px;
         background-size: cover;
+        scroll-snap-align: start;
 
         display: flex;
         justify-content: center;

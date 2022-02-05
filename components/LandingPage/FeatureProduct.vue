@@ -1,10 +1,10 @@
 <template>
-    <swiper-slide>
-        <vue-freezeframe class="featured-product" :src="$store.state.products[`${product.id - 1}`].gifURL" />
-        <div class="featured-tag">
-            <h2 v-animate-on-scroll>{{$store.state.products[`${product.id - 1}`].name}}</h2>
-            <h3 v-animate-on-scroll>£{{$store.state.products[`${product.id - 1}`].price}}</h3>
-            <nuxt-link class="shop-btn" :to="`/product/${product.id}/`" v-animate-on-scroll>SHOP NOW ></nuxt-link>
+    <swiper-slide class="featured-product">
+        <img class="feature-image" :src="$store.state.products[`${product.id - 1}`].imageURL"/>
+        <div class="featured-tag" v-animate-on-scroll>
+            <h2>{{$store.state.products[`${product.id - 1}`].name}}</h2>
+            <h3>£{{$store.state.products[`${product.id - 1}`].price}}</h3>
+            <nuxt-link class="shop-btn" :to="`/product/${product.id}/`">SHOP NOW ></nuxt-link>
         </div>
     </swiper-slide>
 </template>
@@ -16,21 +16,22 @@ export default {
 </script>
 
 <style scoped>
-    .ff-image {
-        background-size: cover;
-        height: 100%;
+    .feature-image {
+        object-fit: cover;
+        width: 100%;
+        height: 65vh !important;
     }
     .featured-product {
-        height: 60vh !important;
         display: flex;
-        align-items: center;
-        margin: 2vh 0px;
+        flex-direction: column;
+        justify-content: center;
+        margin: 5vh 0px;
     }
     .featured-tag {
         height: 20vh !important;
         background: transparent;
         padding: 0 10px;
-        margin: 12vh 0px;
+        margin-top: 2vh;
     }
     .shop-btn {
         display: flex;
@@ -43,7 +44,7 @@ export default {
     }
     .before-enter {
         opacity: 0;
-        transform: translateY(100px);
+        transform: translateY(50px);
         transition: 1.5s all cubic-bezier(0.39, 0.575, 0.565, 1);
             /* transition: all 1.3s ease; */
     }

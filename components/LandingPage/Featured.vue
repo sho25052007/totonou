@@ -50,12 +50,15 @@ export default {
 
 <style scoped>
     .featured-section {
+        scroll-snap-align: start end;
         background-color: whitesmoke;
         height: 100vh;
+        margin: 0 5vw;
     }
     .featured-title {
         height: 10vh !important;
         margin-bottom: 5vh;
+        padding-top: 40px;
     }
     .featured-title h1, .featured-title h2 {
         margin: 2vh 0;
