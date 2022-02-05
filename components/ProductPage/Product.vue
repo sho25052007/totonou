@@ -8,11 +8,11 @@
                 <h2>£{{ productInfo.price }}</h2>
             </div>
             <div class="product-cart" v-animate-on-scroll>
-                <div class="qty-info">
+                <div class="quantity-info">
                     <label for="quantity">Quantity:</label>
-                    <input v-model.number="productInfo.qty" name="quantity" type="number" min="0" max="99"/>
+                    <input v-model.number="productInfo.quantity" name="quantity" type="number" min="0" max="99"/>
                 </div>
-                <button @click="addToCart" :disabled="noQty">Add To Cart ></button>
+                <button @click="addToCart" :disabled="noQuantity">Add To Cart ></button>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@ export default {
     data() {
         return {
             productInfo: {
-                qty: 0,
+                quantity: 0,
                 imageURL: this.$store.state.products[`${this.$route.params.id - 1}`].imageURL,
                 name: this.$store.state.products[`${this.$route.params.id - 1}`].name,
                 price: this.$store.state.products[`${this.$route.params.id - 1}`].price
@@ -32,15 +32,15 @@ export default {
         }
     },
     computed: {
-        noQty() {
-            return this.productInfo.qty < 1
+        noQuantity() {
+            return this.productInfo.quantity < 1
         }
     },
     methods: {
         addToCart() {
-            if(!this.noQty) {
+            if(!this.noQuantity) {
                 this.$store.dispatch('addToCart', this.productInfo)
-                this.productInfo.qty = 0
+                this.productInfo.quantity = 0
                 console.log(this.$store.state.items)
             }
         }

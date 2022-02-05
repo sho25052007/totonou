@@ -1,10 +1,10 @@
 <template>
   <div class="header-section">
-      <h1>TOTONOU</h1>
-      <div class="cart-view" v-if="totalQty > 0">
-          <h4>View Cart</h4>
-          <div class="cart-quantity">QTY:{{ totalQty }}</div>
-          <div class="cart-cost">£{{ totalCost }}</div>
+      <nuxt-link class="home-link" to="/"><h1>TOTONOU</h1></nuxt-link>
+      <div class="cart-view" v-if="totalQuantity > 0">
+          <h4 style="cursor: pointer" @click="$emit('openCart')">View Cart</h4>
+          <h4 class="cart-quantity">QTY:{{ totalQuantity }}</h4>
+          <h4 class="cart-cost">£{{ totalCost }}</h4>
       </div>
   </div>
 </template>
@@ -12,9 +12,9 @@
 <script>
 export default {
     computed: {
-        totalQty: {
+        totalQuantity: {
             get() {
-                return this.$store.getters.totalQty
+                return this.$store.getters.totalQuantity
             }
         },
         totalCost: {
@@ -28,6 +28,10 @@ export default {
 </script>
 
 <style scoped>
+    .home-link {
+        text-decoration: none !important;
+        color: inherit;
+    }
     .header-section {
         z-index: 5;
         width: 100vw;

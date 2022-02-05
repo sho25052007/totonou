@@ -49,6 +49,17 @@ export const state = () => ({
 export const mutations = {
     addToCart(state, cartItem) {
         state.items.push(cartItem)
+    },
+    addToItem(state, cartItem) {
+        let item = state.items.filter(item => item.name === cartItem.name)[0]
+        item.quantity += cartItem.quantity
+        item.cost += cartItem.cost
+    },
+    updateQuantityToItem(state, updateInfo) {
+        let item = state.items.filter(item => item.name == updateInfo.name)[0]
+        item.quantity = updateInfo.quantity
+        let itemCost = Number(item.price) * updateInfo.quantity
+        item.cost = (Math.round(itemCost * 100) / 100).toFixed(2)
     }
 }
 
@@ -59,17 +70,28 @@ export const actions = {
             name: productInfo.name,
             imageURL: productInfo.imageURL,
             price: productInfo.price,
-            cost: productInfo.price * productInfo.qty,
-            qty: productInfo.qty
+            cost: (Math.round(Number((productInfo.price) * productInfo.quantity) * 100) / 100).toFixed(2),
+            quantity: productInfo.quantity
         }
-        commit('addToCart', cartItem)
+        if (state.items.find(item => item.name == cartItem.name)) {
+            commit('addToItem', cartItem)
+        } else {
+            commit('addToCart', cartItem)
+        }
+    },
+    updateQuantityToItem({commit}, payload) {
+        let updateInfo = {
+            name: payload.name,
+            quantity: payload.quantity
+        }
+        commit('updateQuantityToItem', updateInfo)
     }
 }
 
 export const getters = {
-    totalQty: (state) => {
+    totalQuantity: (state) => {
         let quantities = []
-        state.items.forEach(item => quantities.push(item.qty))
+        state.items.forEach(item => quantities.push(item.quantity))
         return quantities.reduce((prevItem, accItem) => prevItem + accItem, 0)
     },
     totalCost: (state) => {

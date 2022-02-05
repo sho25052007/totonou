@@ -11,8 +11,8 @@
     padding: 0;
     }
     html {
-      scroll-snap-type: y proximity;
-      scroll-behavior: smooth;
+      /* scroll-snap-type: y proximity;
+      scroll-behavior: smooth; */
       overflow-x: hidden;
     }
     body {
