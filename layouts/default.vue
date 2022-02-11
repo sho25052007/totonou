@@ -4,6 +4,15 @@
   </div>
 </template>
 
+
+<script>
+export default {
+  created() {
+      this.$store.dispatch('setCart')
+    },
+}
+</script>
+
 <style>
     * {
     box-sizing: border-box;

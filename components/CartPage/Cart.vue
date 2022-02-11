@@ -7,8 +7,8 @@
       </div>
       <div class="cart-info">
         <div class="cart-item-info">
-                <cart-item class="cart-item" v-for="item in cartItems" :key="item.id" :item="item" />
                 <h3 class="cart-total">Cart Total: £{{ totalCost }}</h3>
+                <cart-item class="cart-item" v-for="item in this.$store.getters.cartItems" :key="item.id" :item="item" />
         </div>
         <div class="input-info">
             <div class="shipping-info">
@@ -31,8 +31,8 @@
                 </div>
             </div>
             <div class="card-info">
-                <h3>Credit Card</h3>
                 <div class="card-details">
+                    <h3>Credit Card</h3>
                     <label for="card-name">Name on card:</label>
                     <input type="text" name="card-name">
                     <label for="card-number">Card Number:</label>
@@ -42,8 +42,8 @@
                     <input type="select" name="expiration" id="year">
                     <label for="ccv">CCV:</label>
                     <input type="number" name="ccv">
-                    <div class="checkout-btn">Check Out</div>
                 </div>
+                <div class="checkout-btn"><h4>Check Out</h4></div>
             </div>
         </div>
       </div>
@@ -52,11 +52,9 @@
 
 <script>
 export default {
-    data() {
-        return {
-            cartItems: this.$store.state.items
-        }
-    },
+    // created() {
+    //         this.$store.dispatch('setCart')
+    // },
     components: {
         'cart-item': require('@/components/CartPage/CartItem.vue').default
     },
@@ -116,8 +114,12 @@ export default {
         height: 100%;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         padding: 10px;
         margin-left: 2vw;
+    }
+    .checkout-btn h4{
+        float: right;
     }
     .shipping-info {
         overflow-y: hidden;
@@ -130,11 +132,11 @@ export default {
         margin: 0px 2vw;
     }
     label, input {
-        width: 90%;
+        width: 100%;
     }
     .cart-total {
-        float: right;
-        margin-top: 2vh;
+        display: inline-block;
+        margin-bottom: 2vh;
         margin-right: 1vw;
     }
 </style>

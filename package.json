@@ -12,6 +12,7 @@
     "@morioh/v-smooth-scrollbar": "^1.0.3",
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.19.3",
+    "firebase": "^9.6.6",
     "nuxt": "^2.15.8",
     "swiper": "^7.4.1",
     "vue": "^2.6.14",

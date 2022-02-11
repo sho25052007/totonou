@@ -65,14 +65,22 @@ export default {
 
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
-    .header-section h1, h4{
+    .header-section h1{
         padding: 1vh 5vw;
+    }
+    .header-options {
+        display: flex;
+        align-items: flex-start;
+    }
+    .shop-link h4 {
+        margin-right: 5vw;
     }
     .cart-view {
         display: flex;
         align-items: center;
-        margin-right: 5vw;
+        margin-right: 2.5vw;
     }
     .cart-quantity {
         padding: 0 1vw;
