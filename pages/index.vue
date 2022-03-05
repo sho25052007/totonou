@@ -1,11 +1,12 @@
 <template>
 <div class="full-page">
-    <navbar />
+    <navbar @openCart="toggleCart"/>
     <intro/>
     <display />
     <featured id="shop"/>
     <motto />
     <contact />
+    <lightbox :lightboxCart="lightboxCart" @closeCart="toggleCart" @closeCartWithBg="closeCartWithBg"/>
 </div>
 </template>
 
@@ -31,6 +32,7 @@ export default {
     'featured' : require('@/components/LandingPage/Featured.vue').default,
     'motto' : require('@/components/LandingPage/Motto.vue').default,
     'contact' : require('@/components/LandingPage/Contact.vue').default,
+    'lightbox' : require('@/components/CartPage/Lightbox.vue').default,
   },
   beforeMount() {
     window.scrollTo(0,0);
@@ -60,7 +62,22 @@ export default {
       }, options)
 
       opacityNavbar.observe(intro)
-  }
+  },
+  data() {
+    return {
+        lightboxCart: false,
+    }
+  },
+  methods: {
+    toggleCart() {
+        this.lightboxCart = !this.lightboxCart
+    },
+    closeCartWithBg() {
+        if(this.lightboxCart) {
+            this.lightboxCart = false
+        }
+    }
+  },
 }
 </script>
 

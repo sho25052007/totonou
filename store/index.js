@@ -1,56 +1,80 @@
-import { db } from "~/plugins/firebase.js";
-import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore'
+import { db, storage, auth } from "~/plugins/firebase.js";
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc, getDocs, getDoc } from 'firebase/firestore'
+import { ref, getDownloadURL } from 'firebase/storage'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+
+export const strict = false
 
 export const state = () => ({
+    user: null,
+    authIsReady: false,
     products: [
-        {
-            id: 1,
-            name: 'NotPot Orange',
-            price: '8.80',
-            description: 'This is an orange flavour vitamin',
-            imageURL: '/img/notpot1.jpg',
-            gifURL: 'https://media3.giphy.com/media/cnQhySv6fbDHiQGsU2/giphy.gif?cid=790b76116cf404432bed960b5520ad253c719b77d85b0ec3&rid=giphy.gif&ct=g'
-        },
-        {
-            id: 2,
-            name: 'NotPot Avocado',
-            price: '9.15',
-            description: 'This is an avocado flavour vitamin',
-            imageURL: '/img/notpot3.jpg',
-            gifURL: 'https://media2.giphy.com/media/lOULeMY5Bohs5yyuA2/giphy.gif?cid=790b761145295dcb6287a039b13cbba8cbe05110cd2a9d9d&rid=giphy.gif&ct=g'
-        },
-        {
-            id: 3,
-            name: 'NotPot Aloe Vera',
-            price: '7.00',
-            description: 'This is an mango flavour vitamin',
-            imageURL: '/img/notpot4.jpg',
-            gifURL: 'https://media2.giphy.com/media/QVI7CPMig3JfKVraaX/giphy.gif?cid=790b76115fbc71ab42aa61ed986f5e15f034396bd8b896b4&rid=giphy.gif&ct=g'
-        },
-        {
-            id: 4,
-            name: 'NotPot Citrus',
-            price: '6.50',
-            description: 'This is an citrus flavour vitamin',
-            imageURL: '/img/notpot5.jpg',
-            gifURL: 'https://media4.giphy.com/media/JoQ03rz8xRHEd8oRCs/giphy.gif?cid=790b7611b5fb72f6042bfd172bfce2cf18016b0b08bfc03b&rid=giphy.gif&ct=g'
-        },
-        {
-            id: 5,
-            name: 'NotPot Tropical',
-            price: '12.20',
-            description: 'This is an tropical flavour vitamin',
-            imageURL: '/img/notpot6.jpg',
-            gifURL: 'https://media0.giphy.com/media/LQ3ZxeoAVqf38p2zbq/giphy.gif?cid=790b7611769186c69c0d28245d7140e7508b9373ee901f7d&rid=giphy.gif&ct=g'
-        },
+        // {
+        //     id: 1,
+        //     name: 'NotPot Orange',
+        //     price: '8.80',
+        //     description: 'This is an orange flavour vitamin',
+        //     imageURL: 'notpot1.jpg'
+        // },
+        // {
+        //     id: 2,
+        //     name: 'NotPot Avocado',
+        //     price: '9.15',
+        //     description: 'This is an avocado flavour vitamin',
+        //     imageURL: 'notpot3.jpg'
+        // },
+        // {
+        //     id: 3,
+        //     name: 'NotPot Aloe Vera',
+        //     price: '7.00',
+        //     description: 'This is an mango flavour vitamin',
+        //     imageURL: 'notpot4.jpg'
+        // },
+        // {
+        //     id: 4,
+        //     name: 'NotPot Citrus',
+        //     price: '6.50',
+        //     description: 'This is an citrus flavour vitamin',
+        //     imageURL: 'notpot5.jpg'
+        // },
+        // {
+        //     id: 5,
+        //     name: 'NotPot Tropical',
+        //     price: '12.20',
+        //     description: 'This is an tropical flavour vitamin',
+        //     imageURL: 'notpot6.jpg'
+        // },
     ],
     items: [],
+    productById: {},
 })
 
 export const mutations = {
     setCart(state, items) {
         state.items = items
     },
+
+    setProducts(state, article) {
+        let matchProduct = state.products.find(product => product.id == article.id)
+        if(!matchProduct) {
+            state.products.push(article)
+        }
+    },
+
+    setProductById(state, productArticle) {
+        state.productById = productArticle
+        console.log(state.productById)
+    },
+
+    setUser(state, payload) {
+        state.user = payload
+        // console.log(state.user)
+    },
+
+    setAuthIsReady(state, payload) {
+        state.authIsReady = payload
+        // console.log(state.authIsReady)
+    }
 
     // addCart(state, cartItem) {
     //     state.items.push(cartItem)
@@ -88,13 +112,91 @@ export const actions = {
         })
     },
 
-    async addToCart({state, commit}, productInfo) {
+    async setProducts({commit}) {
+        let colRef = collection(db, 'products')
+        const querySnapshot = await getDocs(colRef)
+        querySnapshot.forEach((doc) => {
+            const imageDownloadURL = getDownloadURL(ref(storage, `${doc.data().imageRef}`))
+            .then( url => {
+                // console.log(url)
+                let article = ({
+                    id: doc.id,
+                    name: doc.data().name,
+                    price: doc.data().price,
+                    description: doc.data().description,
+                    imageURL: url
+                })
+                commit('setProducts', article)
+            })
+        })
+    },
+
+    async getProductById({commit}, id) {
+        let docRef = doc(db, 'products', id)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+            // console.log("Document data:", docSnap.data());
+            const imageDownloadURL = getDownloadURL(ref(storage, `${docSnap.data().imageRef}`))
+            .then( url => {
+                let productArticle = ({
+                    id: docSnap.id,
+                    name: docSnap.data().name,
+                    price: docSnap.data().price,
+                    description: docSnap.data().description,
+                    imageURL: url
+                })
+                // console.log(productArticle)
+                commit('setProductById', productArticle)
+            })
+          } else {
+            // doc.data() will be undefined in this case
+            console.error("No such document!");
+          }
+    },
+
+    // setUser({commit}) {
+    //     let user = auth.currentUser
+    //     // commit('setUser', user)
+    //     onAuthStateChanged(auth, async(_user) => {
+    //         // if(_user) {
+    //             console.log('User state changed. Current user is:', _user)
+    //             user = _user
+    //             commit('setUser', _user)
+    //         // }
+    //     })
+    // },
+
+    async signup({commit}, userInfo) {
+        const res = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password)
+        if (res) {
+            commit('setUser', res.user)
+        } else {
+            throw new Error('could not complete sign up')
+        }
+    },
+
+    async login ({commit}, userInfo) {
+        const res = await signInWithEmailAndPassword(auth, userInfo.email, userInfo.password)
+        if (res) {
+            commit('setUser', res.user)
+        } else {
+            throw new Error('could not complete login up')
+        }
+    },
+
+    async logout({commit}) {
+        await signOut(auth)
+        // let user = null
+        commit('setUser', null)
+    },
+
+    async addToCart({state}, payload) {
         let cartItem = {
-            name: productInfo.name,
-            imageURL: productInfo.imageURL,
-            price: productInfo.price,
-            cost: (Math.round((Number(productInfo.price) * productInfo.quantity) * 100) / 100).toFixed(2),
-            quantity: productInfo.quantity
+            name: payload.name,
+            imageURL: payload.imageURL,
+            price: payload.price,
+            cost: (Math.round((Number(payload.price) * payload.quantity) * 100) / 100).toFixed(2),
+            quantity: payload.quantity
         }
         const colRef = collection(db, 'items')
 
@@ -113,7 +215,7 @@ export const actions = {
         }
     },
 
-    async updateQuantityToItem({state, commit}, payload) {
+    async updateQuantityToItem({state}, payload) {
         let matchItem = state.items.find(item => item.name == payload.name)
 
         if (matchItem) {
@@ -126,7 +228,7 @@ export const actions = {
         // commit('updateCart')
     },
 
-    async deleteItem({state, commit}, payload) {
+    async deleteItem({state}, payload) {
         let matchItem = state.items.find(item => item.name == payload.name)
 
         if (matchItem) {
@@ -138,11 +240,20 @@ export const actions = {
 }
 
 export const getters = {
+    user: (state) => {
+        return state.user
+    },
+    authIsReady: (state) => {
+        return state.authIsReady
+    },
     cartItems: (state) => {
         return state.items
     },
     cartCount: (state) => {
         return state.items.length
+    },
+    products: (state) => {
+        return state.products
     },
     totalQuantity: (state) => {
         let quantities = []
@@ -156,3 +267,5 @@ export const getters = {
         return (Math.round(sumCost * 100) / 100).toFixed(2)
     }
 }
+
+

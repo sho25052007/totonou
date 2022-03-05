@@ -1,11 +1,11 @@
 <template>
 <div class="product-fullpage">
-    <div class="product-card">
-        <img :src="productInfo.imageURL">
+    <div class="product-card" v-if="!loading">
+        <img :src="productById.imageURL">
         <div class="product-headings">
             <div class="product-info" v-animate-on-scroll>
-                <h1>{{ productInfo.name }}</h1>
-                <h2>£{{ productInfo.price }}</h2>
+                <h1>{{ productById.name }}</h1>
+                <h2>£{{ productById.price }}</h2>
             </div>
             <div class="product-cart" v-animate-on-scroll>
                 <div class="quantity-info">
@@ -16,34 +16,46 @@
             </div>
         </div>
     </div>
+    <div class="overlay" v-else>
+        Loading...
+    </div>
 </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+    created(){
+        this.loading = true,
+        this.$store.dispatch('getProductById', this.$route.params.id)
+        .finally(() => (this.loading=false))
+    },
     data() {
         return {
+            loading: false,
             productInfo: {
                 quantity: 0,
-                imageURL: this.$store.state.products[`${this.$route.params.id - 1}`].imageURL,
-                name: this.$store.state.products[`${this.$route.params.id - 1}`].name,
-                price: this.$store.state.products[`${this.$route.params.id - 1}`].price
-            }
+            },
         }
     },
     computed: {
         noQuantity() {
             return this.productInfo.quantity < 1
-        }
+        },
+        ...mapState(['productById'])
+
     },
     methods: {
         addToCart() {
             if(!this.noQuantity) {
-                this.$store.dispatch('addToCart', this.productInfo)
+                let payload = {
+                    ...this.productById,
+                    quantity: this.productInfo.quantity
+                }
+                this.$store.dispatch('addToCart', payload)
                 this.productInfo.quantity = 0
-                console.log(this.$store.state.items)
             }
-        }
+        },
     }
 }
 </script>

@@ -1,15 +1,35 @@
 <template>
   <div class="container">
-      <nuxt />
+      <!-- <nuxt /> -->
+      <nuxt v-if="!loading"/>
+      <div class="overlay" v-else>
+        Loading...
+      </div>
   </div>
 </template>
 
 
 <script>
+import { auth } from "~/plugins/firebase.js";
+import { onAuthStateChanged } from 'firebase/auth'
 export default {
   created() {
-      this.$store.dispatch('setCart')
-    },
+    this.loading = true
+    this.$store.dispatch('setCart')
+    this.$store.dispatch('setProducts')
+    .finally(() => (this.loading=false))
+
+    const unsub = onAuthStateChanged(auth, (_user) => {
+      this.$store.commit('setAuthIsReady', true)
+      this.$store.commit('setUser', _user)
+      unsub()
+    })
+  },
+  data() {
+      return {
+          loading: false,
+      }
+  },
 }
 </script>
 

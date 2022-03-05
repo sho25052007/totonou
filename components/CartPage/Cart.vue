@@ -3,7 +3,7 @@
       <div class="cart-heading">
           <h1>Cart</h1>
           <!-- <a @click="$router.go(-1)" style="cursor: pointer">Go Back</a> -->
-          <h3 style="cursor: pointer" @click="$emit('closeCart')">CLOSE</h3>
+          <h3 style="cursor: pointer" @click="handleCartClose">CLOSE</h3>
       </div>
       <div class="cart-info">
         <div class="cart-item-info">
@@ -52,9 +52,6 @@
 
 <script>
 export default {
-    // created() {
-    //         this.$store.dispatch('setCart')
-    // },
     components: {
         'cart-item': require('@/components/CartPage/CartItem.vue').default
     },
@@ -63,6 +60,11 @@ export default {
             get() {
                 return this.$store.getters.totalCost
             }
+        }
+    },
+    methods: {
+        handleCartClose() {
+            this.$parent.$emit('closeCart')
         }
     }
 }

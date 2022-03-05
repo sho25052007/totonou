@@ -1,9 +1,9 @@
 <template>
     <swiper-slide class="featured-product">
-        <img class="feature-image" :src="$store.state.products[`${product.id - 1}`].imageURL"/>
+        <img class="feature-image" :src="product.imageURL"/>
         <div class="featured-tag" v-animate-on-scroll>
-            <h2>{{$store.state.products[`${product.id - 1}`].name}}</h2>
-            <h3>£{{$store.state.products[`${product.id - 1}`].price}}</h3>
+            <h2>{{product.name}}</h2>
+            <h3>£{{product.price}}</h3>
             <nuxt-link class="shop-btn" :to="`/product/${product.id}/`">SHOP NOW ></nuxt-link>
         </div>
     </swiper-slide>

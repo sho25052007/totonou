@@ -7,7 +7,7 @@
 
     <swiper class="swiper" :options="swiperOption">
         <feature-product
-            v-for="product in $store.state.products"
+            v-for="product in this.$store.getters.products"
             :key="product.id"
             :product="product"
             />
