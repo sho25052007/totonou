@@ -45,13 +45,20 @@ export const state = () => ({
         //     imageURL: 'notpot6.jpg'
         // },
     ],
-    items: [],
+    // items: [],
+    userItems: [],
     productById: {},
 })
 
 export const mutations = {
-    setCart(state, items) {
-        state.items = items
+    // setCart(state, items) {
+    //     state.items = items
+    //     // console.log(state.items)
+    // },
+
+    setUserCart(state, userItems) {
+        state.userItems = userItems
+        // console.log(state.userItems)
     },
 
     setProducts(state, article) {
@@ -63,7 +70,7 @@ export const mutations = {
 
     setProductById(state, productArticle) {
         state.productById = productArticle
-        console.log(state.productById)
+        // console.log(state.productById)
     },
 
     setUser(state, payload) {
@@ -101,18 +108,33 @@ export const mutations = {
 }
 
 export const actions = {
-    setCart({commit}) {
-        let colRef = collection(db, 'items')
-        const unsub = onSnapshot(colRef, snapshot => {
-            let items = []
-            snapshot.docs.forEach(doc => {
-                items.push({...doc.data(), id: doc.id})
+    setCart({state, commit}) {
+        console.log('setCart action', state.user)
+        if(state.user) {
+            const userID = state.user.uid
+            let colRef = collection(db, userID)
+            const unsub = onSnapshot(colRef, snapshot => {
+                let userItems = []
+                snapshot.docs.forEach(doc => {
+                    userItems.push({...doc.data(), id: doc.id})
+                })
+                commit('setUserCart', userItems)
+                console.log(state.userItems)
             })
-            commit('setCart', items)
-        })
-    },
+            // } else {
+                //     let colRef = collection(db, 'items')
+                //     const unsub = onSnapshot(colRef, snapshot => {
+                    //         let items = []
+                    //         snapshot.docs.forEach(doc => {
+                        //             items.push({...doc.data(), id: doc.id})
+                        //         })
+                        //         commit('setCart', items)
+                        //     })
+                    }
+                },
 
     async setProducts({commit}) {
+        console.log('setProducts action')
         let colRef = collection(db, 'products')
         const querySnapshot = await getDocs(colRef)
         querySnapshot.forEach((doc) => {
@@ -154,18 +176,6 @@ export const actions = {
           }
     },
 
-    // setUser({commit}) {
-    //     let user = auth.currentUser
-    //     // commit('setUser', user)
-    //     onAuthStateChanged(auth, async(_user) => {
-    //         // if(_user) {
-    //             console.log('User state changed. Current user is:', _user)
-    //             user = _user
-    //             commit('setUser', _user)
-    //         // }
-    //     })
-    // },
-
     async signup({commit}, userInfo) {
         const res = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password)
         if (res) {
@@ -198,44 +208,81 @@ export const actions = {
             cost: (Math.round((Number(payload.price) * payload.quantity) * 100) / 100).toFixed(2),
             quantity: payload.quantity
         }
-        const colRef = collection(db, 'items')
 
-        let matchItem = state.items.find(item => item.name == cartItem.name)
+        if(state.user) {
+            const userID = state.user.uid
+            const colRef = collection(db, userID)
 
-        if (matchItem) {
-            const docRef = doc(db, 'items', matchItem.id)
-            await updateDoc(docRef, {
-                quantity: matchItem.quantity + cartItem.quantity,
-                cost: (Math.round((Number(matchItem.cost) + Number(cartItem.cost)) * 100) / 100).toFixed(2)
-            })
-            // commit('addItem')
-        } else {
-            await addDoc(colRef, cartItem)
-            // commit('addCart')
+            let matchUserItem = state.userItems.find(item => item.name == cartItem.name)
+
+            if (matchUserItem) {
+                const docRef = doc(db, userID, matchUserItem.id)
+                await updateDoc(docRef, {
+                    quantity: matchUserItem.quantity + cartItem.quantity,
+                    cost: (Math.round((Number(matchUserItem.cost) + Number(cartItem.cost)) * 100) / 100).toFixed(2)
+                })
+            } else {
+                await addDoc(colRef, cartItem)
+            }
+        // } else { //no userID - aka guest?
+        //     const colRef = collection(db, 'items')
+
+        //     let matchItem = state.items.find(item => item.name == cartItem.name)
+
+        //     if (matchItem) {
+        //         const docRef = doc(db, 'items', matchItem.id)
+        //         await updateDoc(docRef, {
+        //             quantity: matchItem.quantity + cartItem.quantity,
+        //             cost: (Math.round((Number(matchItem.cost) + Number(cartItem.cost)) * 100) / 100).toFixed(2)
+        //         })
+        //     } else {
+        //         await addDoc(colRef, cartItem)
+        //     }
         }
     },
 
     async updateQuantityToItem({state}, payload) {
-        let matchItem = state.items.find(item => item.name == payload.name)
+        if(state.user) {
+            let matchUserItem = state.userItems.find(item => item.name == payload.name)
 
-        if (matchItem) {
-            const docRef = doc(db, 'items', matchItem.id)
-            await updateDoc(docRef, {
-                quantity: payload.quantity,
-                cost: (Math.round((Number(matchItem.price) * payload.quantity) * 100) / 100).toFixed(2),
-            })
+            if (matchUserItem) {
+                const userID = state.user.uid
+                const docRef = doc(db, userID, matchUserItem.id)
+                await updateDoc(docRef, {
+                    quantity: payload.quantity,
+                    cost: (Math.round((Number(matchUserItem.price) * payload.quantity) * 100) / 100).toFixed(2),
+                })
+            }
+        // } else {
+        //     let matchItem = state.items.find(item => item.name == payload.name)
+
+        //     if (matchItem) {
+        //         const docRef = doc(db, 'items', matchItem.id)
+        //         await updateDoc(docRef, {
+        //             quantity: payload.quantity,
+        //             cost: (Math.round((Number(matchItem.price) * payload.quantity) * 100) / 100).toFixed(2),
+        //         })
+        //     }
         }
-        // commit('updateCart')
     },
 
     async deleteItem({state}, payload) {
-        let matchItem = state.items.find(item => item.name == payload.name)
+        if(state.user) {
+            let matchUserItem = state.userItems.find(item => item.name == payload.name)
 
-        if (matchItem) {
-            const docRef = doc(db, 'items', matchItem.id)
-            await deleteDoc(docRef)
+            if (matchUserItem) {
+                const userID = state.user.uid
+                const docRef = doc(db, userID, matchUserItem.id)
+                await deleteDoc(docRef)
+            }
+        // } else {
+        //     let matchItem = state.items.find(item => item.name == payload.name)
+
+        //     if (matchItem) {
+        //         const docRef = doc(db, 'items', matchItem.id)
+        //         await deleteDoc(docRef)
+        //     }
         }
-        // commit('deleteCart')
     }
 }
 
@@ -247,22 +294,42 @@ export const getters = {
         return state.authIsReady
     },
     cartItems: (state) => {
-        return state.items
+        return state.userItems
+        // if (state.user) {
+        //     return state.userItems
+        // } else {
+        //     return state.items
+        // }
     },
     cartCount: (state) => {
-        return state.items.length
+        return state.userItems.length
+        // if (state.user) {
+        //     return state.userItems.length
+        // } else {
+        //     return state.items.length
+        // }
     },
     products: (state) => {
         return state.products
     },
     totalQuantity: (state) => {
         let quantities = []
-        state.items.forEach(item => quantities.push(item.quantity))
+        state.userItems.forEach(item => quantities.push(item.quantity))
+        // if (state.user) {
+        //     state.userItems.forEach(item => quantities.push(item.quantity))
+        // } else {
+        //     state.items.forEach(item => quantities.push(item.quantity))
+        // }
         return quantities.reduce((prevItem, accItem) => prevItem + accItem, 0)
     },
     totalCost: (state) => {
         let costs = []
-        state.items.forEach(item => costs.push(Number(item.cost)))
+        state.userItems.forEach(item => costs.push(Number(item.cost)))
+        // if (state.user) {
+        //     state.userItems.forEach(item => costs.push(Number(item.cost)))
+        // } else {
+        //     state.items.forEach(item => costs.push(Number(item.cost)))
+        // }
         let sumCost = costs.reduce((prevCost, accCost) => prevCost + accCost, 0)
         return (Math.round(sumCost * 100) / 100).toFixed(2)
     }

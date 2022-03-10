@@ -4,13 +4,13 @@
       <div class="header-options">
         <div class="auth-options" v-if="authIsReady">
             <!-- for logged in users -->
-            <div v-if="user" class="auth-view">
+            <div v-if="user && !user.isAnonymous" class="auth-view">
                 <div class="user-display">Logged in as {{ user.email }}</div>
                 <button @click="handleLogout">Logout</button>
             </div>
 
             <!-- for logged out users -->
-            <div v-if="!user" class="auth-view">
+            <div v-if="!user || user.isAnonymous" class="auth-view">
                 <nuxt-link class="auth-link" to="/login"><h4>Login</h4></nuxt-link>
                 <nuxt-link class="auth-link" to="/signup"><h4>Signup</h4></nuxt-link>
             </div>
