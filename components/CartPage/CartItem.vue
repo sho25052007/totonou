@@ -52,6 +52,7 @@ export default {
                 })
             } else {
                 this.$store.dispatch('updateQuantityToItem', payload)
+                this.$store.getters.lineItems
             }
         },
         async deleteItem() {

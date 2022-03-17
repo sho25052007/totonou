@@ -145,6 +145,7 @@ export const actions = {
                     id: doc.id,
                     name: doc.data().name,
                     price: doc.data().price,
+                    priceID: doc.data().priceID,
                     description: doc.data().description,
                     imageURL: url
                 })
@@ -164,6 +165,7 @@ export const actions = {
                     id: docSnap.id,
                     name: docSnap.data().name,
                     price: docSnap.data().price,
+                    priceID: docSnap.data().priceID,
                     description: docSnap.data().description,
                     imageURL: url
                 })
@@ -205,6 +207,7 @@ export const actions = {
             name: payload.name,
             imageURL: payload.imageURL,
             price: payload.price,
+            priceID: payload.priceID,
             cost: (Math.round((Number(payload.price) * payload.quantity) * 100) / 100).toFixed(2),
             quantity: payload.quantity
         }
@@ -332,6 +335,16 @@ export const getters = {
         // }
         let sumCost = costs.reduce((prevCost, accCost) => prevCost + accCost, 0)
         return (Math.round(sumCost * 100) / 100).toFixed(2)
+    },
+    lineItems: (state) => {
+        let lineItems = []
+        state.userItems.forEach(item => {
+            lineItems.push({
+                price: item.priceID,
+                quantity: item.quantity
+            })
+        })
+        return lineItems
     }
 }
 

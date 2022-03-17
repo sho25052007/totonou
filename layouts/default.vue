@@ -11,7 +11,8 @@
 
 <script>
 import { auth } from "~/plugins/firebase.js";
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
+import { onAuthStateChanged, signInAnonymously, deleteUser } from 'firebase/auth'
+import { doc, deleteDoc } from 'firebase/firestore'
 export default {
   async created() {
     this.loading = true
@@ -48,6 +49,24 @@ export default {
           loading: false,
       }
   },
+  beforeDestroy() {
+    const user = auth.currentUser
+
+    if (user.isAnonymous) {
+      let userItems = this.$store.state.userItems
+      userItems.forEach(async(item) => {
+        console.log('deleting...', item.name)
+        const userID = state.user.uid
+        const docRef = doc(db, userID, item.id)
+        await deleteDoc(docRef)
+      })
+      deleteUser(user).then(()=> {
+        console.log('Anonymous user deleted')
+      }).catch((err) => {
+        console.error(err.message)
+      })
+    }
+  }
 }
 </script>
 
