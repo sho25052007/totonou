@@ -3,7 +3,7 @@
       <!-- <nuxt /> -->
       <nuxt v-if="!loading"/>
       <div class="overlay" v-else>
-        Loading...
+        <font-awesome-icon icon="fa-solid fa-spinner" spin-pulse size="3x" id="loading-icon"/>
       </div>
   </div>
 </template>
@@ -11,10 +11,9 @@
 
 <script>
 import { auth } from "~/plugins/firebase.js";
-import { onAuthStateChanged, signInAnonymously, deleteUser } from 'firebase/auth'
-import { doc, deleteDoc } from 'firebase/firestore'
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 export default {
-  async created() {
+  created() {
     this.loading = true
     onAuthStateChanged(auth, (user) => {
       if (!user) {
@@ -23,8 +22,6 @@ export default {
           const guestUser = auth.currentUser
           this.$store.commit('setAuthIsReady', true)
           this.$store.commit('setUser', guestUser)
-          // console.log(guestUser.uid)
-          // console.log('guest', [user.isAnonymous, user.uid])
           setup()
         })
         .catch((err) => {
@@ -33,12 +30,10 @@ export default {
       } else {
         this.$store.commit('setAuthIsReady', true)
         this.$store.commit('setUser', user)
-        // console.log('user', [user.isAnonymous, user.uid])
         setup()
       }
     })
     const setup = async() => {
-      // console.log(this.$store.state.user)
       this.$store.dispatch('setCart')
       this.$store.dispatch('setProducts')
       .finally(() => (this.loading=false))
@@ -50,21 +45,9 @@ export default {
       }
   },
   beforeDestroy() {
-    const user = auth.currentUser
-
-    if (user.isAnonymous) {
-      let userItems = this.$store.state.userItems
-      userItems.forEach(async(item) => {
-        console.log('deleting...', item.name)
-        const userID = state.user.uid
-        const docRef = doc(db, userID, item.id)
-        await deleteDoc(docRef)
-      })
-      deleteUser(user).then(()=> {
-        console.log('Anonymous user deleted')
-      }).catch((err) => {
-        console.error(err.message)
-      })
+    if (this.$store.state('userItems') && this.$store.state('products')) {
+      this.$store.dispatch('setCart')
+      this.$store.dispatch('setProducts')
     }
   }
 }
@@ -98,5 +81,15 @@ export default {
     }
     body::-webkit-scrollbar {
       display: none;
+    }
+    .overlay {
+      background: antiquewhite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #loading-icon {
+      color: #f3771f;
     }
 </style>

@@ -123,7 +123,7 @@ export default {
     }
     .cart-item-info {
         width: 100%;
-        margin-right: 1vw;
+        /* margin-right: 1vw; */
         /* height: 100%; */
         overflow-y: auto;
         overflow-x: hidden;
@@ -172,5 +172,16 @@ export default {
         cursor: pointer;
         color: white;
         font-weight: 300;
+    }
+
+
+    /* desktop & mobile media query 480px = 30rem * 16px default font size */
+    @media screen and (max-width: 30rem) and (min-height: 40rem) {
+        .cart-item {
+            margin-right: 0;
+        }
+        .cart-item-info {
+            margin-right: 0;
+        }
     }
 </style>

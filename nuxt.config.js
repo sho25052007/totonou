@@ -26,6 +26,7 @@ export default {
   plugins: [
     '~/plugins/firebase.js',
     '~/plugins/animateOnScroll.client.js',
+    { src: '~/plugins/vue-fontawesome.js', ssr: false },
     { src: '~/plugins/vue-awesome-swiper.js', ssr: false },
     { src: '~/plugins/vue-freezeframe.js', ssr: false },
     { src: '~/plugins/vue-stripe.js', ssr: false },

@@ -41,4 +41,39 @@ export default {
     .follow-us h1, .contact-us h1 {
         margin: 2vh 0;
     }
+
+
+
+    /* mobile media query landscape 800px = 50rem * 16px default font size */
+    @media screen and (min-width: 30rem) and (max-width: 60rem) and (max-height: 40rem) {
+        .follow-us h1, .contact-us h1 {
+            margin: 1vh 0;
+            font-size: 1.6rem;
+        }
+        .follow-us h3, .contact-us h3 {
+            font-size: 1rem;
+        }
+    }
+
+    /* desktop narrow media query 800px = 50rem * 16px default font size */
+    @media screen and (max-width: 60rem) and (min-height: 40rem) {
+        .follow-us h1, .contact-us h1 {
+            margin: 1vh 0;
+            font-size: 1.6rem;
+        }
+        .follow-us h3, .contact-us h3 {
+            font-size: 1rem;
+        }
+    }
+
+    /* desktop & mobile media query 480px = 30rem * 16px default font size */
+    @media screen and (max-width: 30rem) and (min-height: 40rem) {
+        .follow-us h1, .contact-us h1 {
+            margin: 1vh 0;
+            font-size: 1.2rem;
+        }
+        .follow-us h3, .contact-us h3 {
+            font-size: 0.8rem;
+        }
+    }
 </style>

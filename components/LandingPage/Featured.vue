@@ -73,4 +73,42 @@ export default {
         transition: 1.5s all cubic-bezier(0.39, 0.575, 0.565, 1);
             /* transition: all 1.3s ease; */
     }
+
+    /* mobile media query 480px = 30rem * 16px default font size */
+    @media screen and (max-width: 30rem) and (max-height: 40rem) {
+        .featured-title h1, .featured-title h2 {
+            margin: 3vh 0;
+        }
+    }
+
+    /* mobile media query 800px = 50rem * 16px default font size */
+    @media screen and (min-width: 30rem) and (max-width: 60rem) and (max-height: 40rem) {
+        .featured-title {
+            margin-bottom: 18vh;
+        }
+        .featured-title h1, .featured-title h2 {
+            margin: 2vh 0;
+        }
+    }
+
+    /* desktop narrow media query 800px = 50rem * 16px default font size */
+    @media screen and (max-width: 60rem) and (min-height: 40rem) {
+        .featured-title {
+            margin-bottom: 6vh;
+        }
+        .featured-title h1, .featured-title h2 {
+            margin: 2vh 0;
+        }
+    }
+
+    /* desktop very narrow media query 480px = 30rem * 16px default font size */
+    @media screen and (max-width: 30rem) and (min-height: 40rem) {
+        .featured-title {
+            margin-bottom: 6vh;
+            font-size: 1rem;
+        }
+        .featured-title h1, .featured-title h2 {
+            margin: 3vh 0;
+        }
+    }
 </style>
